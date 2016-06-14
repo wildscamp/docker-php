@@ -39,6 +39,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 ENV PHP_XDEBUG 0
 ENV PHP_TIMEZONE "UTC"
 ENV VOLUME_PATH /var/www/html
+VOLUME ${VOLUME_PATH}
 
 # Setup apache
 RUN a2enmod rewrite

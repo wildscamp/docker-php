@@ -1,0 +1,47 @@
+version: '2'
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    hostname: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pw
+      - MYSQL_DATABASE=db
+    command: "/mysql.sh"
+    volumes:
+      - ~/.docker/data/mysql/db:/var/lib/mysql
+      - ~/.docker/data/mysql/mysql.sh:/mysql.sh
+    restart: on-failure
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: wilds/phpmyadmin:4.0.10.15
+    hostname: phpmyadmin
+    ports:
+      - "8080:80"
+    restart: on-failure
+    links:
+      - mysql:db
+
+  dbgp-proxy:
+    container_name: dbgp-proxy
+    image: christianbladescb/dbgpproxy
+    restart: on-failure
+    ports:
+      - "9001:9001"
+
+  wordpress:
+    container_name: wordpress-ols
+    image: wilds/wpdevenvironment
+    hostname: wordpress
+    ports:
+      - "80:80"
+    working_dir: /var/www/html
+    volumes:
+      - ~/.dev-wp:/var/www/html
+    links:
+      - mysql:db
+      - dbgp-proxy:xdebug-handler
+    environment:
+      - PHP_XDEBUG=1
+    restart: on-failure

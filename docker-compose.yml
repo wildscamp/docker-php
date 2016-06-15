@@ -6,11 +6,11 @@ services:
     hostname: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=pw
-      - MYSQL_DATABASE=db
+      - MYSQL_DATABASE=local_db
     command: "/mysql.sh"
     volumes:
-      - ~/.docker/data/mysql/db:/var/lib/mysql
-      - ~/.docker/data/mysql/mysql.sh:/mysql.sh
+      - ../.docker-data/mysql:/var/lib/mysql
+      - ./mysql.sh:/mysql.sh
     restart: on-failure
 
   phpmyadmin:
@@ -38,7 +38,7 @@ services:
       - "80:80"
     working_dir: /var/www/html
     volumes:
-      - ~/.dev-wp:/var/www/html
+      - ../.docker-html:/var/www/html
     links:
       - mysql:db
       - dbgp-proxy:xdebug-handler

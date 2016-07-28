@@ -5,7 +5,7 @@ MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 #   - https://github.com/splattael/docker-debian-php/blob/master/jessie/Dockerfile
 #   - https://github.com/docker-library/php/blob/f016f5dc420e7d360f7381eb014ac6697e247e11/5.6/apache/Dockerfile
 
-ENV RELEASE_DATE 2016-07-27
+ENV RELEASE_DATE 2016-07-28
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN \

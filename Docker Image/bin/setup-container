@@ -9,7 +9,7 @@ typeset script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 _set_timezone "${TIMEZONE}"
 
 # Set DocumentRoot to VOLUME_PATH
-sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" /etc/apache2/apache2.conf
+sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" ${APACHE_CONFDIR}/apache2.conf
 
 # Set Apache user/group
 create_user_from_directory_owner "${VOLUME_PATH}"

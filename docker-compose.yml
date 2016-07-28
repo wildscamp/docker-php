@@ -23,25 +23,18 @@ services:
     links:
       - mysql:db
 
-  dbgp-proxy:
-    container_name: dbgp-proxy
-    image: christianbladescb/dbgpproxy
-    restart: on-failure
-    ports:
-      - "9001:9001"
-
   wordpress:
-    container_name: wordpress-ols
-    image: wilds/wpdevenvironment
+    container_name: wordpress
+    image: wilds/wpdevenvironment:latest
     hostname: wordpress
+    environment:
+      - TZ=America/New_York
     ports:
       - "80:80"
+      - "9000:9000"
     working_dir: /var/www/html
     volumes:
       - ../.docker-html:/var/www/html
     links:
       - mysql:db
-      - dbgp-proxy:xdebug-handler
-    environment:
-      - PHP_XDEBUG=1
     restart: on-failure

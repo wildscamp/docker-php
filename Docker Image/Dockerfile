@@ -1,53 +1,75 @@
-FROM php:5.6-apache
+FROM debian:jessie
+MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
-RUN apt-get update && apt-get install -y libpng12-dev libjpeg-dev && rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-	&& docker-php-ext-install gd mysqli opcache
+# Adapted and modified from the following files:
+#   - https://github.com/splattael/docker-debian-php/blob/master/jessie/Dockerfile
+#   - https://github.com/docker-library/php/blob/f016f5dc420e7d360f7381eb014ac6697e247e11/5.6/apache/Dockerfile
 
-# set recommended PHP.ini settings
-# see https://secure.php.net/manual/en/opcache.installation.php
+ENV RELEASE_DATE 2016-07-27
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN \
+  apt-get -qq update && \
+  apt-get -qq install \
+    apache2 php5 php5-cli ssmtp libapache2-mod-php5 php5-mysql php5-json php5-curl php5-gd \
+    php5-xdebug libmcrypt-dev zlib1g-dev telnet git curl vim && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+ENV MODS_AVAILABLE_PATH /etc/php5/mods-available
+ENV CONFD_PATH /etc/php5/apache2/conf.d
+
+# Copy custom ini modules
+COPY mods-available/*.ini ${MODS_AVAILABLE_PATH}/
+
+# Enable different module settings
+RUN php5enmod xdebug
+
+ENV APACHE_CONFDIR /etc/apache2
+ENV APACHE_ENVVARS $APACHE_CONFDIR/envvars
+
+# logs should go to stdout / stderr
+RUN set -ex \
+	&& . "$APACHE_ENVVARS" \
+	&& ln -sfT /dev/stderr "$APACHE_LOG_DIR/error.log" \
+	&& ln -sfT /dev/stdout "$APACHE_LOG_DIR/access.log" \
+	&& ln -sfT /dev/stdout "$APACHE_LOG_DIR/other_vhosts_access.log"
+
+# PHP files should be handled by PHP, and should be preferred over any other file type
 RUN { \
-		echo 'opcache.memory_consumption=128'; \
-		echo 'opcache.interned_strings_buffer=8'; \
-		echo 'opcache.max_accelerated_files=4000'; \
-		echo 'opcache.revalidate_freq=60'; \
-		echo 'opcache.fast_shutdown=1'; \
-		echo 'opcache.enable_cli=1'; \
-	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+		echo '<FilesMatch \.php$>'; \
+		echo '\tSetHandler application/x-httpd-php'; \
+		echo '</FilesMatch>'; \
+		echo; \
+#		echo 'DirectoryIndex disabled'; \
+		echo 'DirectoryIndex index.php index.html'; \
+		echo; \
+		echo '<Directory /var/www/>'; \
+		echo '\tOptions -Indexes'; \
+		echo '\tAllowOverride All'; \
+		echo '</Directory>'; \
+	} | tee "$APACHE_CONFDIR/conf-available/docker-php.conf" \
+	&& a2enconf docker-php
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-	libmcrypt-dev \
-    zlib1g-dev \
-    telnet \
-    git \
-  && rm -rf /var/lib/apt/lists/*
-
-COPY bin/* /usr/local/bin/
-
-# Setup bare-minimum extra extensions for Laravel & others
-RUN docker-php-ext-install mbstring mcrypt zip \
-	&& docker-php-pecl-install xdebug \
-	&& rm ${PHP_INI_DIR}/conf.d/docker-php-pecl-xdebug.ini
+# Enable mod_rewrite
+RUN a2enmod rewrite
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
 	--install-dir=/usr/local/bin \
 	--filename=composer
 
-# You can use this to enable xdebug. start-apache2 script will enable xdebug
-# if PHP_XDEBUG is set to 1
-ENV PHP_XDEBUG 0
-ENV PHP_TIMEZONE "UTC"
+COPY bin/* /usr/local/bin/
+
+ENV TIMEZONE 'America/New_York'
+
 ENV VOLUME_PATH /var/www/html
+
 VOLUME ${VOLUME_PATH}
 
-# Setup apache
-RUN a2enmod rewrite
-
-# Copy configs
-COPY xdebug.ini ${PHP_INI_DIR}/conf.d/docker-php-pecl-xdebug.ini.disabled
-
+WORKDIR ${VOLUME_PATH}
 
 EXPOSE 80
+
 ENTRYPOINT ["setup-container"]
 CMD ["apache2-foreground"]

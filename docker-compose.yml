@@ -4,6 +4,8 @@ services:
     container_name: mysql
     image: mysql:5.7
     hostname: mysql
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=pw
       - MYSQL_DATABASE=local_db
@@ -28,7 +30,7 @@ services:
     image: wilds/wpdevenvironment:latest
     hostname: wordpress
     environment:
-      - TIMEZONE="America/New_York"
+      - TIMEZONE=America/New_York
     ports:
       - "80:80"
     working_dir: /var/www/html

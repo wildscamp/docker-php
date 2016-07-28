@@ -2,17 +2,20 @@
 
 typeset script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-. "$script_dir/php5-timezone"
-. "$script_dir/php5-xdebug"
+. "$script_dir/timezone"
 . "$script_dir/create-user-from-directory-owner"
 
-_php_set_xdebug "${PHP_INI_DIR}" "${PHP_XDEBUG}"
-_php_set_timezone "${PHP_INI_DIR}" "${PHP_TIMEZONE}"
+# Set timezone in container
+_set_timezone "${TIMEZONE}"
 
 # Set DocumentRoot to VOLUME_PATH
-sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" /etc/apache2/apache2.conf
+sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" ${APACHE_CONFDIR}/apache2.conf
 
 # Set Apache user/group
 create_user_from_directory_owner "${VOLUME_PATH}"
+
+# Set the Apache2 ServerName to the hostname of the container
+echo "ServerName `hostname`" > ${APACHE_CONFDIR}/conf-available/set-hostname.conf
+a2enconf set-hostname
 
 exec "$@"

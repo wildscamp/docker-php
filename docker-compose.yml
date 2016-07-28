@@ -28,7 +28,7 @@ services:
     image: wilds/wpdevenvironment:latest
     hostname: wordpress
     environment:
-      - TZ=America/New_York
+      - TIMEZONE="America/New_York"
     ports:
       - "80:80"
       - "9000:9000"

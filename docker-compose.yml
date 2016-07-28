@@ -31,7 +31,6 @@ services:
       - TIMEZONE="America/New_York"
     ports:
       - "80:80"
-      - "9000:9000"
     working_dir: /var/www/html
     volumes:
       - ../.docker-html:/var/www/html

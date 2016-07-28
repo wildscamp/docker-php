@@ -64,8 +64,10 @@ COPY bin/* /usr/local/bin/
 ENV TIMEZONE 'America/New_York'
 
 ENV VOLUME_PATH /var/www/html
+ENV CERTIFICATE_PATH /usr/local/share/ca-certificates
 
 VOLUME ${VOLUME_PATH}
+VOLUME ${CERTIFICATE_PATH}
 
 WORKDIR ${VOLUME_PATH}
 

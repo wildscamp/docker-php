@@ -35,6 +35,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - ../.docker-html:/var/www/html
+      - ../.docker-certs:/usr/local/share/ca-certificates
     links:
       - mysql:db
     restart: on-failure

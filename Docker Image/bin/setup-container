@@ -18,4 +18,11 @@ create_user_from_directory_owner "${VOLUME_PATH}"
 echo "ServerName `hostname`" > ${APACHE_CONFDIR}/conf-available/set-hostname.conf
 a2enconf set-hostname
 
+# Set correct permissions on certificates added to the container
+# This has no affect on files hosted through a volume
+for FILE in ${CERTIFICATE_PATH}/*; do
+    chown root:staff $FILE
+    chmod 775 $FILE
+done
+
 exec "$@"

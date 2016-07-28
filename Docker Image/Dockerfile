@@ -23,7 +23,7 @@ ENV CONFD_PATH /etc/php5/apache2/conf.d
 COPY mods-available/*.ini ${MODS_AVAILABLE_PATH}/
 
 # Enable different module settings
-RUN php5enmod xdebug
+RUN php5enmod opcache xdebug
 
 ENV APACHE_CONFDIR /etc/apache2
 ENV APACHE_ENVVARS $APACHE_CONFDIR/envvars

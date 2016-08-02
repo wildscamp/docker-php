@@ -62,6 +62,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 	--install-dir=/usr/local/bin \
 	--filename=composer
 
+# Add a symbolic link to PHP that is the same as the web host.
+# This is primarily for CLI php scripts run inside the container.
+RUN ln -s $(which php) /usr/local/bin/php56
+
 COPY bin/* /usr/local/bin/
 
 ENV TIMEZONE 'America/New_York'

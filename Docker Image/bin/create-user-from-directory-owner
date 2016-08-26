@@ -31,8 +31,8 @@ create_user_from_directory_owner() {
         echo "[Apache User] Created user for uid ($owner_id), and named it '$owner'"
     fi
 
-    sed -i "s/APACHE_RUN_USER=www-data/APACHE_RUN_USER=$owner/g" /etc/apache2/envvars
-    sed -i "s/APACHE_RUN_GROUP=www-data/APACHE_RUN_GROUP=$group/g" /etc/apache2/envvars
+    #sed -i "s/APACHE_RUN_USER=www-data/APACHE_RUN_USER=user/g" /etc/apache2/envvars
+    #sed -i "s/APACHE_RUN_GROUP=www-data/APACHE_RUN_GROUP=user/g" /etc/apache2/envvars
     echo "[Apache User] Set Apache user to $owner and group to $group"
 
     return 0

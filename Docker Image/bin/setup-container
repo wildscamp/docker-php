@@ -3,7 +3,6 @@
 typeset script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 . "$script_dir/timezone"
-. "$script_dir/create-user-from-directory-owner"
 
 # Set timezone in container
 _set_timezone "${TIMEZONE}"

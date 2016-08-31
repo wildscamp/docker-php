@@ -1,17 +1,27 @@
-# Local PHP Development Environment
-This container implements an Apache + PHP server. The reason we created this from scratch
-instead of basing it off the [official php container](https://hub.docker.com/_/php/) is
-because there is a
+# Docker Apache + PHP Server
+
+![Docker Logo](https://github.com/wildscamp/docker-localphpdevenvironment/blob/master/assets/img/small_v-trans-115.png?raw=true) ![The Wilds Logo](https://avatars1.githubusercontent.com/u/11079956?v=3&s=115)
+
+**Note:** The primary use case of this container is as part of a local development
+environment. Because of that, we would not recommend using this container in a production
+environment.
+
+This container implements an Apache + PHP server. The reason we created this from
+[debian:jesse](https://hub.docker.com/_/debian/) instead of basing it off the
+[official php container](https://hub.docker.com/_/php/) is because there is a
 [bug in the official container in relation to Xdebug](https://github.com/docker-library/php/issues/133).
 The `php5` library from `apt-get` does not have that problem, so this container uses that
 version of PHP.
 
 The compiled versions of this container can be found in the
-[Docker registry](https://hub.docker.com/r/wilds/wpdevenvironment/).
+[Docker registry](https://hub.docker.com/r/wildscamp/php/).
 
-**Usage**
-1. Download the [`docker-compose.yml`](https://github.com/wildscamp/docker-wpdevenvironment/blob/master/docker-compose.yml)
-2. Run `docker-compose up` inside the directory where the `docker-compose.yml` file is located.
+Features
+----
+* Apache2 + PHP server
+* Xdebug enabled with session cookie
+* Ability to debug static variable references. See [official php container issue](https://github.com/docker-library/php/issues/133).
+* Apache access logs redirected to `STDOUT`
 
 Environment variables
 ----
@@ -70,12 +80,13 @@ to attach volumes.
 * `/var/www/html` - The path from which Apache serves up files.
 * `/usr/local/share/ca-certificates` - Used for adding SSL certificates to the container.
 
-### Named Volumes
+### Named Data Volumes
 Folders that are mounted [directly from the host computer](https://docs.docker.com/engine/tutorials/dockervolumes/#/mount-a-host-directory-as-a-data-volume)
-much slower than [named volumes](https://docs.docker.com/engine/reference/commandline/volume_create/).
+are much slower than [named data volumes](https://docs.docker.com/engine/reference/commandline/volume_create/).
 While not a requirement, we definitely recommend storing your application data in a named
-volume. In our tests, switching to using named volumes made requests that were taking 4
-seconds to respond under host computer sharing dropped to under a second with named volumes.
+volume. In our (unscientific) tests, switching to using named data volumes made requests
+that were taking 4 seconds to respond (with volumes shared from the host computer) drop to
+under 1 second with named data volumes.
 
 Ports
 ----
@@ -112,4 +123,29 @@ docker run -d --name www-server -v html-data:/var/www/html \
     -t wilds/wpdevenvironment
 
 docker exec -it www-server /bin/bash
+```
+
+4) Setting up in a docker-compose.yml. Full sample [here](https://github.com/wildscamp/docker-localdevenvironment/blob/master/docker-compose.yml).
+
+```yaml
+services:
+  mysql:
+    # Mysql container definition
+
+  wordpress:
+    container_name: wordpress
+    image: wildscamp/php:latest
+    hostname: wordpress
+    environment:
+      - TIMEZONE=America/New_York
+      - XDEBUG_REMOTE_HOST=10.0.75.1
+    ports:
+      - "80:80"
+    working_dir: /var/www/html
+    volumes:
+      - docker-html:/var/www/html
+      - docker-certificates:/usr/local/share/ca-certificates
+    links:
+      - mysql:db
+    restart: on-failure
 ```

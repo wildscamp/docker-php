@@ -2,7 +2,7 @@ FROM debian:jessie
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
-      org.wilds.docker-php.version="2.2.0"
+      org.wilds.docker-php.version="2.2.1"
 
 # Adapted and modified from the following files:
 #   - https://github.com/splattael/docker-debian-php/blob/master/jessie/Dockerfile
@@ -90,5 +90,5 @@ WORKDIR ${VOLUME_PATH}
 
 EXPOSE 80
 
-ENTRYPOINT ["setup-container"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]

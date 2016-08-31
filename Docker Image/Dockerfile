@@ -10,27 +10,26 @@ LABEL vendor="The Wilds" \
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN \
-  apt-get -qq update && apt-get -qq install \
-    apache2 \
-    curl \
-    git \
-    libapache2-mod-php5 \
-    libmcrypt-dev \
-    php5 \
-    php5-cli \
-    php5-curl \
-    php5-gd \
-    php5-json \
-    php5-mysql \
-    php5-xdebug \
-    rsync \
-    ssmtp \
-    telnet \
-    vim \
-    zlib1g-dev \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get -qq update && apt-get -qq install \
+        apache2 \
+        curl \
+        git \
+        libapache2-mod-php5 \
+        libmcrypt-dev \
+        php5 \
+        php5-cli \
+        php5-curl \
+        php5-gd \
+        php5-json \
+        php5-mysql \
+        php5-xdebug \
+        rsync \
+        ssmtp \
+        telnet \
+        vim \
+        zlib1g-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV MODS_AVAILABLE_PATH=/etc/php5/mods-available \
     CONFD_PATH=/etc/php5/apache2/conf.d \
@@ -68,9 +67,9 @@ RUN set -e \
     } | tee "$APACHE_CONFDIR/conf-available/docker-php.conf" \
     && a2enconf docker-php \
 
-	# Add a symbolic link to PHP that is the same as the web host.
+    # Add a symbolic link to PHP that is the same as the web host.
     # This is primarily for CLI php scripts run inside the container.
-	&& ln -s $(which php) /usr/local/bin/php56
+    && ln -s $(which php) /usr/local/bin/php56
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- \

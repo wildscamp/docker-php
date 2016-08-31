@@ -90,5 +90,5 @@ WORKDIR ${VOLUME_PATH}
 
 EXPOSE 80
 
-ENTRYPOINT ["setup-container"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]

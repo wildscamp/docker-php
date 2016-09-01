@@ -82,9 +82,13 @@ COPY bin/* /usr/local/bin/
 COPY mods-available/*.ini ${MODS_AVAILABLE_PATH}/
 
 # Enable different module settings
-RUN php5enmod xdebug # enable xdebug settings \
-    && php5dismod opcache # disable opcache \
-    && a2enmod rewrite # enable mod_rewrite
+# - enable xdebug settings
+# - disable opcache
+# - enable mod_rewrite
+RUN php5enmod xdebug \
+    && php5dismod opcache \
+    && a2enmod rewrite \
+    && chmod -R +x /usr/local/bin/
 
 WORKDIR ${VOLUME_PATH}
 

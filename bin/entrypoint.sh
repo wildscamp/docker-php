@@ -15,12 +15,11 @@ sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=${XDEBUG_REMOTE_HOST}/" ${MOD
 
 # Set the Apache2 ServerName to the hostname of the container
 echo "ServerName `hostname`" > ${APACHE_CONFDIR}/conf-available/set-hostname.conf
-a2enconf set-hostname
-
-chown -R root:staff ${CERTIFICATE_PATH}
-chmod -R 775 ${CERTIFICATE_PATH}
+a2enconf set-hostname > /dev/null
 
 # set appropriate permissions
+chown -R root:staff ${CERTIFICATE_PATH}
+chmod -R 775 ${CERTIFICATE_PATH}
 chown -R www-data:www-data "${VOLUME_PATH}"
 
 exec "$@"

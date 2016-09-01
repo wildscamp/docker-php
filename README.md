@@ -125,7 +125,7 @@ docker run -d --name www-server -v html-data:/var/www/html \
 docker exec -it www-server /bin/bash
 ```
 
-4) Setting up in a docker-compose.yml. Full sample [here](https://github.com/wildscamp/docker-localphpenvironment/blob/master/docker-compose.yml).
+4) Setting up in a docker-compose.yml. Full sample [here](https://github.com/wildscamp/docker-localphpdevenvironment/blob/master/docker-compose.yml).
 
 ```yaml
 services:

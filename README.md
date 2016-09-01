@@ -104,7 +104,7 @@ Examples
 
 ```bash
 docker run --rm -v html-data:/var/www/html \
-    -t wilds/wpdevenvironment
+    -t wildscamp/php
 ```
 
 2) Start the container serving up files in a named volume but sending Xdebug events to
@@ -113,19 +113,19 @@ docker run --rm -v html-data:/var/www/html \
 ```bash
 docker run --rm -v html-data:/var/www/html \
     -e "XDEBUG_REMOTE_HOST=192.168.99.100" \
-    -t wilds/wpdevenvironment
+    -t wildscamp/php
 ```
 
 3) Get a bash prompt into an already running container named `www-server`.
 
 ```bash
 docker run -d --name www-server -v html-data:/var/www/html \
-    -t wilds/wpdevenvironment
+    -t wildscamp/php
 
 docker exec -it www-server /bin/bash
 ```
 
-4) Setting up in a docker-compose.yml. Full sample [here](https://github.com/wildscamp/docker-localdevenvironment/blob/master/docker-compose.yml).
+4) Setting up in a docker-compose.yml. Full sample [here](https://github.com/wildscamp/docker-localphpenvironment/blob/master/docker-compose.yml).
 
 ```yaml
 services:
@@ -134,7 +134,7 @@ services:
 
   wordpress:
     container_name: wordpress
-    image: wildscamp/php:latest
+    image: wildscamp/php
     hostname: wordpress
     environment:
       - TIMEZONE=America/New_York

@@ -1,6 +1,6 @@
 # Docker Apache + PHP Server
 
-![Docker Logo](https://github.com/wildscamp/docker-localphpdevenvironment/blob/master/assets/img/small_v-trans-115.png?raw=true) ![The Wilds Logo](https://avatars1.githubusercontent.com/u/11079956?v=3&s=115)
+![Docker Logo](https://www.gravatar.com/avatar/def8e498c0e2b4d1b0cb398ca164cddd?s=115) ![The Wilds Logo](https://www.gravatar.com/avatar/731d4f0ca8553a4f4b2a4f35d1d72280?s=115)
 
 **Note:** The primary use case of this container is as part of a local development
 environment. Because of that, we would not recommend using this container in a production

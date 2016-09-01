@@ -2,7 +2,7 @@ FROM debian:jessie
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
-      org.wilds.docker-php.version="2.2.2"
+      org.wilds.docker-php.version="2.2.3"
 
 # Adapted and modified from the following files:
 #   - https://github.com/splattael/docker-debian-php/blob/master/jessie/Dockerfile

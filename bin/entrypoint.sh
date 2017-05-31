@@ -11,7 +11,7 @@ _set_timezone "${TIMEZONE}"
 sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" ${APACHE_CONFDIR}/apache2.conf
 
 # Make sure xdebug is going to send events back to the correct IP.
-sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=${XDEBUG_REMOTE_HOST}/" ${MODS_AVAILABLE_PATH}/xdebug.ini
+sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=${XDEBUG_REMOTE_HOST}/" $PHP_INI_DIR/conf.d/xdebug.ini
 
 # Set the Apache2 ServerName to the hostname of the container
 echo "ServerName `hostname`" > ${APACHE_CONFDIR}/conf-available/set-hostname.conf

@@ -33,10 +33,25 @@ RUN pecl install xdebug \
 RUN a2enmod rewrite \
     && chmod -R +x /usr/local/bin/
 
+
+
+ENV   CONFD_PATH=$PHP_INI_DIR/conf.d \
+      APACHE_CONFDIR=/etc/apache2 \
+      TIMEZONE='America/New_York' \
+      VOLUME_PATH=/var/www/html \
+      CERTIFICATE_PATH=/usr/local/share/ca-certificates \
+      TERM=xterm
+
+ENV APACHE_ENVVARS=$APACHE_CONFDIR/envvars
+
 # Copy custom ini modules
-COPY mods-available/*.ini $PHP_INI_DIR/conf.d/
+COPY mods-available/*.ini $CONFD_PATH/
+
+RUN ln -s $(which php) /usr/local/bin/php71
 
 EXPOSE 80
+
+WORKDIR ${VOLUME_PATH}
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]

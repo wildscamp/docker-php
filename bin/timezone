@@ -29,8 +29,6 @@ function _set_timezone() {
         return $RETVAL
     fi
 
-    php5enmod timezone > /dev/null
-
     echo "[TZ] Timezone has been set to '${timezone}'"
 
     return 0

@@ -24,16 +24,19 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
         --install-dir=/usr/local/bin \
         --filename=composer
 
-COPY bin/* /usr/local/bin/
-
 RUN pecl install xdebug \
     && docker-php-ext-install gd json mysqli \
     && docker-php-ext-enable xdebug
 
-RUN a2enmod rewrite \
-    && chmod -R +x /usr/local/bin/
+COPY bin/* /usr/local/bin/
 
+ADD apache-conf/default-ssl.conf /etc/apache2/sites-available/
+ADD apache-conf/rootCA.conf /certconf/rootCA.conf
+ADD apache-conf/local-dev.conf /certconf/local-dev.conf
 
+RUN a2enmod rewrite ssl \
+    && chmod -R +x /usr/local/bin/ \
+    && ln -s /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.conf
 
 ENV   CONFD_PATH=$PHP_INI_DIR/conf.d \
       APACHE_CONFDIR=/etc/apache2 \

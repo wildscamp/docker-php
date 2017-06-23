@@ -14,7 +14,7 @@ sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" ${APACHE_CONFDIR}/apache2.conf
 sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=${XDEBUG_REMOTE_HOST}/" $PHP_INI_DIR/conf.d/xdebug.ini
 
 # Set the Apache2 ServerName to the hostname of the container
-echo "ServerName `hostname`" > ${APACHE_CONFDIR}/conf-available/set-hostname.conf
+# echo "ServerName `hostname`" > ${APACHE_CONFDIR}/conf-available/set-hostname.conf
 a2enconf set-hostname > /dev/null
 
 # set appropriate permissions

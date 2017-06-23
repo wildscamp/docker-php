@@ -15,16 +15,19 @@ fi
 rm -f "$APACHE_PID_FILE"
 
 # Setup SSL
-if [[ ! -f /usr/local/share/ca-certificates/Server.crt ]] ; then
-	if [[ ! -f /usr/local/share/ca-certificates/RootCA.key ]] ; then
+if [[ ! -f /usr/local/share/ca-certificates/Server.crt || ! -f /usr/local/share/ca-certificates/Server.key ]] ; then
+	if [[ ! -f /usr/local/share/ca-certificates/RootCA.key || ! -f /usr/local/share/ca-certificates/RootCA.pem ]] ; then
 		echo "Generating root CA"
 
-        ROOTCACONF=/usr/local/share/ca-certificates/RootCA.conf
+    ROOTCACONF=/usr/local/share/ca-certificates/RootCA.conf
 		if [[ ! -f ${ROOTCACONF} ]]; then
-		    ROOTCACONF=/certconf/RootCA.conf
+		  ROOTCACONF=/certconf/RootCA.conf
 		fi
 
-		openssl genrsa -out /usr/local/share/ca-certificates/RootCA.key 2048
+    if [[ ! -f /usr/local/share/ca-certificates/RootCA.key ]]; then
+		  openssl genrsa -out /usr/local/share/ca-certificates/RootCA.key 2048
+		fi
+
 		openssl req -x509 -new -nodes -key /usr/local/share/ca-certificates/RootCA.key -sha256 -days 36500 -out /usr/local/share/ca-certificates/RootCA.pem -config ${ROOTCACONF}
 	fi
 	
@@ -33,10 +36,13 @@ if [[ ! -f /usr/local/share/ca-certificates/Server.crt ]] ; then
 
 	LOCALKEYCONF=/usr/local/share/ca-certificates/ServerCert.conf
 	if [[ ! -f ${LOCALKEYCONF} ]]; then
-        LOCALKEYCONF=/certconf/ServerCert.conf
-    fi
+    LOCALKEYCONF=/certconf/ServerCert.conf
+  fi
 
-	openssl genrsa -out /usr/local/share/ca-certificates/Server.key 2048
+  if [[ ! -f /usr/local/share/ca-certificates/Server.key ]]; then
+	  openssl genrsa -out /usr/local/share/ca-certificates/Server.key 2048
+	fi
+
 	openssl req -new -key /usr/local/share/ca-certificates/Server.key -out /usr/local/share/ca-certificates/Server.csr -config ${LOCALKEYCONF}
 	openssl x509 -req -in /usr/local/share/ca-certificates/Server.csr -CA /usr/local/share/ca-certificates/RootCA.pem -CAkey /usr/local/share/ca-certificates/RootCA.key -CAcreateserial -out /usr/local/share/ca-certificates/Server.crt -days 36500 -sha256 -extensions v3_req -extfile ${LOCALKEYCONF}
 fi

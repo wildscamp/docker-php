@@ -15,18 +15,30 @@ fi
 rm -f "$APACHE_PID_FILE"
 
 # Setup SSL
-if [[ ! -f /etc/ssl/private/local-dev.crt ]] ; then
-	if [[ ! -f /certconf/rootCA.key ]] ; then
+if [[ ! -f /usr/local/share/ca-certificates/Server.crt ]] ; then
+	if [[ ! -f /usr/local/share/ca-certificates/RootCA.key ]] ; then
 		echo "Generating root CA"
-		openssl genrsa -out /certconf/rootCA.key 2048
-		openssl req -x509 -new -nodes -key /certconf/rootCA.key -sha256 -days 36500 -out /certconf/rootCA.pem -config /certconf/rootCA.conf
+
+        ROOTCACONF=/usr/local/share/ca-certificates/RootCA.conf
+		if [[ ! -f ${ROOTCACONF} ]]; then
+		    ROOTCACONF=/certconf/RootCA.conf
+		fi
+
+		openssl genrsa -out /usr/local/share/ca-certificates/RootCA.key 2048
+		openssl req -x509 -new -nodes -key /usr/local/share/ca-certificates/RootCA.key -sha256 -days 36500 -out /usr/local/share/ca-certificates/RootCA.pem -config ${ROOTCACONF}
 	fi
 	
-	# You can change the key settings in local-dev.conf
+	# You can change the key settings in ServerCert.conf
 	echo "Creating server certificate"
-	openssl genrsa -out /etc/ssl/private/local-dev.key 2048
-	openssl req -new -key /etc/ssl/private/local-dev.key -out /certconf/local-dev.csr -config /certconf/local-dev.conf
-	openssl x509 -req -in /certconf/local-dev.csr -CA /certconf/rootCA.pem -CAkey /certconf/rootCA.key -CAcreateserial -out /etc/ssl/private/local-dev.crt -days 36500 -sha256 -extensions v3_req -extfile /certconf/local-dev.conf
+
+	LOCALKEYCONF=/usr/local/share/ca-certificates/ServerCert.conf
+	if [[ ! -f ${LOCALKEYCONF} ]]; then
+        LOCALKEYCONF=/certconf/ServerCert.conf
+    fi
+
+	openssl genrsa -out /usr/local/share/ca-certificates/Server.key 2048
+	openssl req -new -key /usr/local/share/ca-certificates/Server.key -out /usr/local/share/ca-certificates/Server.csr -config ${LOCALKEYCONF}
+	openssl x509 -req -in /usr/local/share/ca-certificates/Server.csr -CA /usr/local/share/ca-certificates/RootCA.pem -CAkey /usr/local/share/ca-certificates/RootCA.key -CAcreateserial -out /usr/local/share/ca-certificates/Server.crt -days 36500 -sha256 -extensions v3_req -extfile ${LOCALKEYCONF}
 fi
 
 exec apache2 -DFOREGROUND "$@"

@@ -111,19 +111,6 @@ Here are the files that can go in there:
   generated and the supplied ones will be used in Apache. However, if this file exists and
   the `Server.crt` file does not exist, this file will be used to generate the `Server.crt`
   file.
-* **RootCA.key** _(optional)_ - If either `Server.crt` or `Server.key` do not exist, this key will be
-  used as the key file when generating the root CA. If this file does not exist, a new
-  `RootCA.key` file will be generated.
-* **RootCA.pem** _(optional)_ - If either `Server.crt` or `Server.key` do not exist and if either this
-  file or `RootCA.key` do not exist, this file will be generated. It is used when
-  generating the `Server.crt` file. If this file exists and the `RootCA.key` file does not,
-  this file will be regenerated and overwritten since it is created from the `RootCA.key`
-  file.
-* **RootCA.conf** _(optional)_ - If you want to use the container to generate a root certificate and
-  you want to customize that generation, this file allows you to define information about
-  that certificate that will be generated.
-* **ServerCert.conf** _(optional)_ - If you want to customize the generation of the server's certificate,
-  define those customizations in this file.
 
 Examples
 ----

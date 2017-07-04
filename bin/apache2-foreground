@@ -24,10 +24,7 @@ if [[ ! -f /usr/local/share/ca-certificates/Server.crt || ! -f /usr/local/share/
 		  ROOTCACONF=/certconf/RootCA.conf
 		fi
 
-    if [[ ! -f /usr/local/share/ca-certificates/RootCA.key ]]; then
-		  openssl genrsa -out /usr/local/share/ca-certificates/RootCA.key 2048
-		fi
-
+		openssl genrsa -out /usr/local/share/ca-certificates/RootCA.key 2048
 		openssl req -x509 -new -nodes -key /usr/local/share/ca-certificates/RootCA.key -sha256 -days 36500 -out /usr/local/share/ca-certificates/RootCA.pem -config ${ROOTCACONF}
 	fi
 	
@@ -39,12 +36,12 @@ if [[ ! -f /usr/local/share/ca-certificates/Server.crt || ! -f /usr/local/share/
     LOCALKEYCONF=/certconf/ServerCert.conf
   fi
 
-  if [[ ! -f /usr/local/share/ca-certificates/Server.key ]]; then
-	  openssl genrsa -out /usr/local/share/ca-certificates/Server.key 2048
-	fi
-
+  openssl genrsa -out /usr/local/share/ca-certificates/Server.key 2048
 	openssl req -new -key /usr/local/share/ca-certificates/Server.key -out /usr/local/share/ca-certificates/Server.csr -config ${LOCALKEYCONF}
 	openssl x509 -req -in /usr/local/share/ca-certificates/Server.csr -CA /usr/local/share/ca-certificates/RootCA.pem -CAkey /usr/local/share/ca-certificates/RootCA.key -CAcreateserial -out /usr/local/share/ca-certificates/Server.crt -days 36500 -sha256 -extensions v3_req -extfile ${LOCALKEYCONF}
+
+
+	rm -f RootCA.key RootCA.pem RootCA.srl Server.csr
 fi
 
 exec apache2 -DFOREGROUND "$@"

@@ -52,6 +52,8 @@ ENV   CONFD_PATH=$PHP_INI_DIR/conf.d \
 
 ENV APACHE_ENVVARS=$APACHE_CONFDIR/envvars
 
+COPY php.ini-development.txt $PHP_INI_DIR/php.ini
+
 # Copy custom ini modules
 COPY mods-available/*.ini $CONFD_PATH/
 

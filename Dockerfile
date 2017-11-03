@@ -35,10 +35,9 @@ RUN pecl install xdebug \
 
 COPY bin/* /usr/local/bin/
 
-ADD apache-conf/set-hostname.conf /etc/apache2/conf-available/
-ADD apache-conf/default-ssl.conf /etc/apache2/sites-available/
-ADD apache-conf/RootCA.conf /certconf/RootCA.conf
-ADD apache-conf/ServerCert.conf /certconf/ServerCert.conf
+COPY apache-conf/set-hostname.conf /etc/apache2/conf-available/
+COPY apache-conf/default-ssl.conf /etc/apache2/sites-available/
+COPY apache-conf/RootCA.conf apache-conf/ServerCert.conf /certconf/
 
 RUN a2enmod rewrite ssl \
     && chmod -R +x /usr/local/bin/ \

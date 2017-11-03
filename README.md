@@ -18,6 +18,8 @@ Features
 * SSL Enabled
 * Xdebug enabled with session cookie
 * Apache access logs redirected to `STDOUT`
+* [Composer](https://getcomposer.org/) pre-installed
+* [WP-CLI](http://wp-cli.org/) pre-installed
 
 Environment variables
 ----

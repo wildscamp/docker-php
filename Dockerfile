@@ -2,7 +2,7 @@ FROM php:7.1-apache-jessie
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
-      org.wilds.docker-php.version="3.0.0"
+      org.wilds.docker-php.version="3.1.1"
 
 RUN apt-get -qq update && apt-get -qq install \
         libcurl3-dev \
@@ -42,6 +42,7 @@ RUN pecl install xdebug memcached \
 
 COPY bin/* /usr/local/bin/
 
+ADD apache-conf/set-hostname.conf /etc/apache2/conf-available/
 ADD apache-conf/default-ssl.conf /etc/apache2/sites-available/
 
 RUN a2enmod rewrite ssl \

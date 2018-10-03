@@ -14,19 +14,4 @@ fi
 : "${APACHE_PID_FILE:=${APACHE_RUN_DIR:=/var/run/apache2}/apache2.pid}"
 rm -f "$APACHE_PID_FILE"
 
-# Setup SSL
-if [[ ! -f /etc/ssl/private/local-dev.crt ]] ; then
-	if [[ ! -f /certconf/rootCA.key ]] ; then
-		echo "Generating root CA"
-		openssl genrsa -out /certconf/rootCA.key 2048
-		openssl req -x509 -new -nodes -key /certconf/rootCA.key -sha256 -days 36500 -out /certconf/rootCA.pem -config /certconf/rootCA.conf
-	fi
-	
-	# You can change the key settings in local-dev.conf
-	echo "Creating server certificate"
-	openssl genrsa -out /etc/ssl/private/local-dev.key 2048
-	openssl req -new -key /etc/ssl/private/local-dev.key -out /certconf/local-dev.csr -config /certconf/local-dev.conf
-	openssl x509 -req -in /certconf/local-dev.csr -CA /certconf/rootCA.pem -CAkey /certconf/rootCA.key -CAcreateserial -out /etc/ssl/private/local-dev.crt -days 36500 -sha256 -extensions v3_req -extfile /certconf/local-dev.conf
-fi
-
 exec apache2 -DFOREGROUND "$@"

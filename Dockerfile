@@ -1,4 +1,4 @@
-FROM php:7.1.5-apache
+FROM php:7.1-apache-jessie
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
@@ -16,7 +16,19 @@ RUN apt-get -qq update && apt-get -qq install \
         libpng-dev \
         libjpeg-dev \
         zlib1g-dev \
-    && apt-get clean \
+        libmemcached-dev \
+        python \
+        python-pip \
+		&& pip install -U pip setuptools \
+		&& apt-get -qq install \
+        libffi-dev \
+        libssl-dev \
+        openssl \
+		&& python -m easy_install --upgrade pyOpenSSL \
+		&& pip install idna==2.5 certbot-dns-route53 \
+		&& apt remove --purge -y libffi-dev libssl-dev \
+		&& apt-get clean \
+		&& apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install composer
@@ -24,15 +36,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
         --install-dir=/usr/local/bin \
         --filename=composer
 
-RUN pecl install xdebug \
+RUN pecl install xdebug memcached \
     && docker-php-ext-install gd json mysqli \
-    && docker-php-ext-enable xdebug
+    && docker-php-ext-enable xdebug memcached
 
 COPY bin/* /usr/local/bin/
 
 ADD apache-conf/default-ssl.conf /etc/apache2/sites-available/
-ADD apache-conf/rootCA.conf /certconf/rootCA.conf
-ADD apache-conf/local-dev.conf /certconf/local-dev.conf
 
 RUN a2enmod rewrite ssl \
     && chmod -R +x /usr/local/bin/ \

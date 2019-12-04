@@ -19,7 +19,7 @@ RUN apt-get -qq update && apt-get -qq install \
         libmemcached-dev \
         python \
         python-pip \
-		&& pip install -U pip setuptools \
+		&& pip install -U pip setuptools six \
 		&& apt-get -qq install \
         libffi-dev \
         libssl-dev \

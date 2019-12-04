@@ -1,4 +1,4 @@
-FROM php:7.1.5-apache
+FROM php:7.1-apache-jessie
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
@@ -16,7 +16,19 @@ RUN apt-get -qq update && apt-get -qq install \
         libpng-dev \
         libjpeg-dev \
         zlib1g-dev \
-    && apt-get clean \
+        libmemcached-dev \
+        python \
+        python-pip \
+		&& pip install -U pip setuptools \
+		&& apt-get -qq install \
+        libffi-dev \
+        libssl-dev \
+        openssl \
+		&& python -m easy_install --upgrade pyOpenSSL \
+		&& pip install idna==2.5 certbot-dns-route53 \
+		&& apt remove --purge -y libffi-dev libssl-dev \
+		&& apt-get clean \
+		&& apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install composer
@@ -29,15 +41,14 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
-RUN pecl install xdebug \
+RUN pecl install xdebug memcached \
     && docker-php-ext-install gd json mysqli \
-    && docker-php-ext-enable xdebug
+    && docker-php-ext-enable xdebug memcached
 
 COPY bin/* /usr/local/bin/
 
-COPY apache-conf/set-hostname.conf /etc/apache2/conf-available/
-COPY apache-conf/default-ssl.conf /etc/apache2/sites-available/
-COPY apache-conf/RootCA.conf apache-conf/ServerCert.conf /certconf/
+ADD apache-conf/set-hostname.conf /etc/apache2/conf-available/
+ADD apache-conf/default-ssl.conf /etc/apache2/sites-available/
 
 RUN a2enmod rewrite ssl \
     && chmod -R +x /usr/local/bin/ \

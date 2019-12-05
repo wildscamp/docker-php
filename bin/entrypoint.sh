@@ -69,5 +69,8 @@ fi
 chown -R root:staff ${CERTIFICATE_PATH}
 chmod -R 775 ${CERTIFICATE_PATH}
 chown -R www-data:www-data "${VOLUME_PATH}"
+if [ -n "${LOG_PATH}" ] && [ -d "${LOG_PATH}" ] ; then
+  chown -R www-data:www-data "${LOG_PATH}"
+fi
 
 exec "$@"

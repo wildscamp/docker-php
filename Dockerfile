@@ -10,7 +10,6 @@ RUN apt-get -qq update && apt-get -qq install \
         git \
         libmcrypt-dev \
         rsync \
-        ssmtp \
         telnet \
         vim \
         libpng-dev \

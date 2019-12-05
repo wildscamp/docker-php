@@ -2,7 +2,7 @@ FROM php:7.2-apache
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
-      org.wilds.docker-php.version="3.1.1"
+      org.wilds.docker-php.version="7.2.0"
 
 RUN apt-get -qq update && apt-get -qq install \
         libcurl3-dev \

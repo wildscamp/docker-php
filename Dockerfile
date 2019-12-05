@@ -1,4 +1,4 @@
-FROM php:7.1-apache-jessie
+FROM php:7.2-apache
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \

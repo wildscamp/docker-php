@@ -17,15 +17,15 @@ RUN apt-get -qq update && apt-get -qq install \
         libjpeg-dev \
         zlib1g-dev \
         libmemcached-dev \
-        python \
-        python-pip \
-		&& pip install -U pip setuptools six \
+        python3 \
+        python3-pip \
+		&& pip3 install -U pip setuptools six \
 		&& apt-get -qq install \
         libffi-dev \
         libssl-dev \
         openssl \
-		&& python -m easy_install --upgrade pyOpenSSL \
-		&& pip install idna==2.5 certbot-dns-route53 \
+		&& pip install pyOpenSSL \
+		&& pip install idna certbot-dns-route53 \
 		&& apt remove --purge -y libffi-dev libssl-dev \
 		&& apt-get clean \
 		&& apt-get autoremove -y \

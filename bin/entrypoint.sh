@@ -24,9 +24,10 @@ a2enconf set-hostname > /dev/null
 # set appropriate permissions
 chown -R root:staff ${CERTIFICATE_PATH}
 chmod -R 775 ${CERTIFICATE_PATH}
-chown -R www-data:www-data "${VOLUME_PATH}"
+setfacl -Rm g:www-data:rwX,d:g:www-data:rwX "${VOLUME_PATH}"
+
 if [ -n "${LOG_PATH}" ] && [ -d "${LOG_PATH}" ] ; then
-  chown -R www-data:www-data "${LOG_PATH}"
+  setfacl -Rm g:www-data:rwX,d:g:www-data:rwX "${LOG_PATH}"
 fi
 
 until [ -f /etc/pki/tls/private/privkey.pem ]

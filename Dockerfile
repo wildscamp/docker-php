@@ -5,6 +5,7 @@ LABEL vendor="The Wilds" \
       org.wilds.docker-php.version="7.2.0"
 
 RUN apt-get -qq update && apt-get -qq install \
+        acl \
         libcurl3-dev \
         curl \
         git \

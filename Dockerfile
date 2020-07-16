@@ -1,4 +1,4 @@
-ARG PHP_VERSION
+ARG PHP_VERSION=7.4
 
 FROM php:${PHP_VERSION}-apache
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
@@ -51,7 +51,8 @@ ENV   CONFD_PATH=$PHP_INI_DIR/conf.d \
       TIMEZONE='America/New_York' \
       VOLUME_PATH=/var/www/html \
       CERTIFICATE_PATH=/usr/local/share/ca-certificates \
-      TERM=xterm
+      TERM=xterm \
+      PHP_VERSION=${PHP_VERSION}
 
 ENV APACHE_ENVVARS=$APACHE_CONFDIR/envvars
 
@@ -60,7 +61,8 @@ COPY php.ini-development.txt $PHP_INI_DIR/php.ini
 # Copy custom ini modules
 COPY mods-available/*.ini $CONFD_PATH/
 
-RUN ln -s $(which php) /usr/local/bin/php71
+# Make a link to a PHP executable based on PHP version number
+RUN ln -s $(which php) /usr/local/bin/php$(echo $PHP_VERSION | sed "s/\.//g" | cut -c -2)
 
 EXPOSE 80
 

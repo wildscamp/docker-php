@@ -14,7 +14,7 @@ sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" ${APACHE_CONFDIR}/apache2.conf
 if [[ -v XDEBUG_REMOTE_HOST ]]; then
 	sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=${XDEBUG_REMOTE_HOST}/" $PHP_INI_DIR/conf.d/xdebug.ini
 else
-	sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=10.0.75.1/" $PHP_INI_DIR/conf.d/xdebug.ini
+	sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=host.docker.internal/" $PHP_INI_DIR/conf.d/xdebug.ini
 fi
 
 # Set the Apache2 ServerName to the hostname of the container

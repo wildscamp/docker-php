@@ -1,8 +1,10 @@
-FROM php:7.2-apache
+ARG PHP_VERSION
+
+FROM php:${PHP_VERSION}-apache
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
-      org.wilds.docker-php.version="7.2.0"
+      org.wilds.docker-php.version="${PHP_VERSION}.0"
 
 RUN apt-get -qq update && apt-get -qq install \
         acl \

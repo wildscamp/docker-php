@@ -1,32 +1,24 @@
-FROM php:7.1-apache-jessie
+ARG PHP_VERSION
+
+FROM php:${PHP_VERSION}-apache
 MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
-      org.wilds.docker-php.version="3.1.1"
+      org.wilds.docker-php.version="${PHP_VERSION}.0"
 
 RUN apt-get -qq update && apt-get -qq install \
+        acl \
         libcurl3-dev \
         curl \
         git \
         libmcrypt-dev \
         rsync \
-        ssmtp \
         telnet \
         vim \
         libpng-dev \
         libjpeg-dev \
         zlib1g-dev \
         libmemcached-dev \
-        python \
-        python-pip \
-		&& pip install -U pip setuptools \
-		&& apt-get -qq install \
-        libffi-dev \
-        libssl-dev \
-        openssl \
-		&& python -m easy_install --upgrade pyOpenSSL \
-		&& pip install idna==2.5 certbot-dns-route53 \
-		&& apt remove --purge -y libffi-dev libssl-dev \
 		&& apt-get clean \
 		&& apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
@@ -35,6 +27,11 @@ RUN apt-get -qq update && apt-get -qq install \
 RUN curl -sS https://getcomposer.org/installer | php -- \
         --install-dir=/usr/local/bin \
         --filename=composer
+
+# Install wp-cli
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
 
 RUN pecl install xdebug memcached \
     && docker-php-ext-install gd json mysqli \
@@ -57,6 +54,8 @@ ENV   CONFD_PATH=$PHP_INI_DIR/conf.d \
       TERM=xterm
 
 ENV APACHE_ENVVARS=$APACHE_CONFDIR/envvars
+
+COPY php.ini-development.txt $PHP_INI_DIR/php.ini
 
 # Copy custom ini modules
 COPY mods-available/*.ini $CONFD_PATH/

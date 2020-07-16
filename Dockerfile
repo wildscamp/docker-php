@@ -16,16 +16,6 @@ RUN apt-get -qq update && apt-get -qq install \
         libjpeg-dev \
         zlib1g-dev \
         libmemcached-dev \
-        python3 \
-        python3-pip \
-		&& pip3 install -U pip setuptools six \
-		&& apt-get -qq install \
-        libffi-dev \
-        libssl-dev \
-        openssl \
-		&& pip install pyOpenSSL \
-		&& pip install idna certbot-dns-route53 \
-		&& apt remove --purge -y libffi-dev libssl-dev \
 		&& apt-get clean \
 		&& apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*

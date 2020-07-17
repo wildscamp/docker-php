@@ -64,7 +64,7 @@ COPY mods-available/*.ini $CONFD_PATH/
 # Make a link to a PHP executable based on PHP version number
 RUN ln -s $(which php) /usr/local/bin/php$(echo $PHP_VERSION | sed "s/\.//g" | cut -c -2)
 
-EXPOSE 80
+EXPOSE 80 443
 
 WORKDIR ${VOLUME_PATH}
 

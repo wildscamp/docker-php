@@ -1,4 +1,4 @@
-ARG PHP_VERSION=7.4
+ARG PHP_VERSION=8.1
 
 FROM php:${PHP_VERSION}-apache
 
@@ -34,7 +34,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && mv wp-cli.phar /usr/local/bin/wp
 
 RUN pecl install xdebug memcached \
-    && docker-php-ext-install gd json mysqli \
+    && docker-php-ext-install gd mysqli \
     && docker-php-ext-enable xdebug memcached
 
 COPY bin/* /usr/local/bin/

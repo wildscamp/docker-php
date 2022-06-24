@@ -10,11 +10,16 @@ _set_timezone "${TIMEZONE}"
 # Set DocumentRoot to VOLUME_PATH
 sed -i "s|\${VOLUME_PATH}|${VOLUME_PATH}|g" ${APACHE_CONFDIR}/apache2.conf
 
-# Make sure xdebug is going to send events back to the correct IP.
+# This is to enable legacy support for the XDEBUG_REMOTE_HOST env variable
 if [[ -v XDEBUG_REMOTE_HOST ]]; then
-	sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=${XDEBUG_REMOTE_HOST}/" $PHP_INI_DIR/conf.d/xdebug.ini
+  XDEBUG_CLIENT_HOST=$XDEBUG_REMOTE_HOST
+fi
+
+# Make sure xdebug is going to send events back to the correct IP.
+if [[ -v XDEBUG_CLIENT_HOST ]]; then
+	sed -i "s/xdebug.client_host=.*/xdebug.client_host=${XDEBUG_CLIENT_HOST}/" $PHP_INI_DIR/conf.d/xdebug.ini
 else
-	sed -i "s/xdebug.remote_host=.*/xdebug.remote_host=host.docker.internal/" $PHP_INI_DIR/conf.d/xdebug.ini
+	sed -i "s/xdebug.client_host=.*/xdebug.client_host=host.docker.internal/" $PHP_INI_DIR/conf.d/xdebug.ini
 fi
 
 # Set the Apache2 ServerName to the hostname of the container

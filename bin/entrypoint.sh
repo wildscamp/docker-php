@@ -18,8 +18,15 @@ fi
 # Make sure xdebug is going to send events back to the correct IP.
 if [[ -v XDEBUG_CLIENT_HOST ]]; then
 	sed -i "s/xdebug.client_host=.*/xdebug.client_host=${XDEBUG_CLIENT_HOST}/" $PHP_INI_DIR/conf.d/xdebug.ini
-else
-	sed -i "s/xdebug.client_host=.*/xdebug.client_host=host.docker.internal/" $PHP_INI_DIR/conf.d/xdebug.ini
+fi
+
+# Make sure xdebug is going to send events back to the correct IP.
+if [[ -v XDEBUG_CLIENT_PORT ]]; then
+	sed -i "s/xdebug.client_port=.*/xdebug.client_port=${XDEBUG_CLIENT_PORT}/" $PHP_INI_DIR/conf.d/xdebug.ini
+fi
+
+if [[ -v SSL_HOSTNAME ]]; then
+  echo "ServerName $SSL_HOSTNAME" > /etc/apache2/conf-available/set-hostname.conf
 fi
 
 # Set the Apache2 ServerName to the hostname of the container

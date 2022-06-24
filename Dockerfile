@@ -1,9 +1,9 @@
-ARG PHP_VERSION=7.4
+ARG PHP_VERSION=8.1
 
 FROM php:${PHP_VERSION}-apache
-MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
+      org.wilds.image.authors="Joel Rowley <joel.rowley@wilds.org>" \
       org.wilds.docker-php.version="${PHP_VERSION}.0"
 
 RUN apt-get -qq update && apt-get -qq install \
@@ -34,7 +34,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && mv wp-cli.phar /usr/local/bin/wp
 
 RUN pecl install xdebug memcached \
-    && docker-php-ext-install gd json mysqli \
+    && docker-php-ext-install gd mysqli \
     && docker-php-ext-enable xdebug memcached
 
 COPY bin/* /usr/local/bin/
@@ -64,7 +64,7 @@ COPY mods-available/*.ini $CONFD_PATH/
 # Make a link to a PHP executable based on PHP version number
 RUN ln -s $(which php) /usr/local/bin/php$(echo $PHP_VERSION | sed "s/\.//g" | cut -c -2)
 
-EXPOSE 80
+EXPOSE 80 443
 
 WORKDIR ${VOLUME_PATH}
 

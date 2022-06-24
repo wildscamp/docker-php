@@ -1,9 +1,9 @@
 ARG PHP_VERSION=7.4
 
 FROM php:${PHP_VERSION}-apache
-MAINTAINER Joel Rowley <joel.rowley@wilds.org>
 
 LABEL vendor="The Wilds" \
+      org.wilds.image.authors="Joel Rowley <joel.rowley@wilds.org>" \
       org.wilds.docker-php.version="${PHP_VERSION}.0"
 
 RUN apt-get -qq update && apt-get -qq install \

@@ -1,11 +1,11 @@
-# Docker Apache + PHP 7 Server
+# Docker Apache + PHP 8.1 Server
 
 ![Docker Logo](https://www.gravatar.com/avatar/def8e498c0e2b4d1b0cb398ca164cddd?s=115) ![The Wilds Logo](https://www.gravatar.com/avatar/731d4f0ca8553a4f4b2a4f35d1d72280?s=115)
 
 > This container is designed to be used for local development. As such, it has not been
 > hardened as required for a production environment.
 
-This container implements an Apache + PHP 7 server. See the list of features below to
+This container implements an Apache + PHP 8.1 server. See the list of features below to
 understand what this container offers over the stock `php:<version>-apache` container.
 
 The compiled versions of this container can be found in the
@@ -13,7 +13,7 @@ The compiled versions of this container can be found in the
 
 ## Features
 
-* Apache2 + PHP 7 server
+* Apache2 + PHP 8.1 server
 * SSL Enabled
 * Xdebug enabled with session cookie
 * Apache access logs redirected to `STDOUT`
@@ -47,11 +47,29 @@ This image uses environment variables to allow the configuration of some paramet
   [Docker documentation](https://docs.docker.com/docker-for-windows/networking/#use-cases-and-workarounds)
   for information regarding this DNS name.
 
+----
+
+### `XDEBUG_REMOTE_PORT`
+
+* **Description:** The port of the computer where Xdebug events should
+  be sent when debugging is enabled via the cookie or query string. See
+  [Xdebug's docs](https://xdebug.org/docs/remote) about how to enable debugging.
+* **Default:** `9003`. See the
+  [Docker documentation](https://docs.docker.com/docker-for-windows/networking/#use-cases-and-workarounds)
+  for information regarding this DNS name.
+
+----
+
+### `SERVER_HOSTNAME`
+
+* **Description:** The hostname that Apache will assign to itself.
+* **Default:** `local.dev`
+
 #### Caveats
 
 * If this is set incorrectly, Xdebug events will not make it to the Xdebug client that
   is listening for them.
-* You most likely will need to open up TCP port `9000` on the Xdebug client computer as the
+* You most likely will need to open up TCP port `9003` on the Xdebug client computer as the
   Xdebug client computer's firewall will likely block this traffic.
 
 ----
@@ -81,7 +99,8 @@ to attach volumes.
 ## Ports
 
 * `80` inbound - Apache listens on this port.
-* `TCP 9000` outbound - Xdebug events are sent from the container to the address defined
+* `TCP 9003` outbound - If `XDEBUG_REMOTE_PORT` is defined to be something else, then that
+  outbound port must be opened. Xdebug events are sent from the container to the address defined
   by the `XDEBUG_REMOTE_HOST` environment variable. This does not need to be opened in the
   Docker firewall. However, this port may need to be opened on the inbound firewall of the
   computer that is receiving the Xdebug events.

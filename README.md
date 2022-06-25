@@ -123,7 +123,7 @@ If you are wanting to use SSL (port 443), the following certificate files must e
       -t wildscamp/php
   ```
   
-2) Start the container serving up files in a named volume but sending Xdebug events to
+1) Start the container serving up files in a named volume but sending Xdebug events to
    `172.25.64.1`.
 
 ```bash
@@ -132,7 +132,7 @@ docker run --rm -v /home/jdoe/project/html:/var/www/html -v /home/jdoe/.letsencr
     -t wildscamp/php
 ```
 
-3) Setting up in a docker-compose.yml. Full sample [here](https://github.com/wildscamp/docker-localphpdevenvironment/blob/master/docker-compose.yml).
+1) Setting up in a docker-compose.yml. Full sample [here](https://github.com/wildscamp/docker-localphpdevenvironment/blob/master/docker-compose.yml).
 
 ```yaml
 services:

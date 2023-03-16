@@ -9,7 +9,7 @@ This container implements an Apache + PHP 8.1 server. See the list of features b
 understand what this container offers over the stock `php:<version>-apache` container.
 
 The compiled versions of this container can be found in the
-[Docker registry](https://hub.docker.com/r/wildscamp/php/).
+[container registry](https://github.com/wildscamp/docker-php/pkgs/container/php).
 
 ## Features
 

@@ -25,8 +25,8 @@ if [[ -v XDEBUG_CLIENT_PORT ]]; then
 	sed -i "s/xdebug.client_port=.*/xdebug.client_port=${XDEBUG_CLIENT_PORT}/" $PHP_INI_DIR/conf.d/xdebug.ini
 fi
 
-if [[ -v SSL_HOSTNAME ]]; then
-  echo "ServerName $SSL_HOSTNAME" > /etc/apache2/conf-available/set-hostname.conf
+if [[ -v SERVER_HOSTNAME ]]; then
+  echo "ServerName $SERVER_HOSTNAME" > /etc/apache2/conf-available/set-hostname.conf
 fi
 
 # Set the Apache2 ServerName to the hostname of the container

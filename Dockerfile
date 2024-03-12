@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.1
+ARG PHP_VERSION=8.3
 
 FROM php:${PHP_VERSION}-apache
 
@@ -18,7 +18,7 @@ RUN apt-get -qq update && apt-get -qq install \
         libpng-dev \
         libjpeg-dev \
         zlib1g-dev \
-        libmemcached-dev \
+        libmemcached-dev libssl-dev zlib1g-dev \
 		&& apt-get clean \
 		&& apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
